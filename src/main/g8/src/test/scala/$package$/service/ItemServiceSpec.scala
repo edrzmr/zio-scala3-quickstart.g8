@@ -22,10 +22,14 @@ object ItemServiceSpec extends ZIOSpecDefault:
   val getByNonExistingId: ULayer[ItemRepository] =
     ItemRepoMock.GetById(equalTo(ItemId(124)), value(None))
 
-  val updateSuccesfullMock: ULayer[ItemRepository] = ItemRepoMock.GetById(
-    equalTo(ItemId(123)),
-    value(Some(exampleItem)),
-  ) ++ ItemRepoMock.Update(equalTo(exampleItem.copy(description = "bar")))
+  val updateMock: ULayer[ItemRepository] =
+    ItemRepoMock.Update(
+      hasField("id", _.id, equalTo(exampleItem.id)),
+      value(Some(())),
+    ) ++ ItemRepoMock.Update(
+      hasField("id", _.id, equalTo(ItemId(124))),
+      value(None),
+    )
 
   def spec = suite("item service test")(
     test("get item id accept long") {
