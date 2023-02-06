@@ -22,6 +22,14 @@ object HttpRoutes extends JsonSupport:
     case Method.GET -> !! / "items" / itemId =>
       val effect: ZIO[ItemRepository, DomainError, Item] =
         for {
+          _         <- ZIO.fail(
+                         try
+                           throw new RuntimeException("testing..")
+                         catch {
+                           case e: Exception =>
+                             RepositoryError(e)
+                         }
+                       )
           id        <- Utils.extractLong(itemId)
           maybeItem <- ItemService.getItemById(ItemId(id))
           item      <- maybeItem

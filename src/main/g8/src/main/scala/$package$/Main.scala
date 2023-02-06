@@ -31,6 +31,7 @@ object Main extends ZIOAppDefault:
 
   val program =
     for
+      _      <- ZIO.logInfo("starting app...")
       config <- getConfig[ServerConfig]
       _      <- Server.start(config.port, routes)
     yield ()
@@ -41,5 +42,5 @@ object Main extends ZIOAppDefault:
       ServerConfig.layer,
       repoLayer,
       postgresLayer,
-      dataSourceLayer
+      dataSourceLayer,
     )
